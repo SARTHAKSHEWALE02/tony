@@ -1,0 +1,89 @@
+CREATE DATABASE StudentResultDB;
+USE StudentResultDB;
+
+CREATE TABLE Student (
+    StudentID INT PRIMARY KEY,
+    Name VARCHAR(50) NOT NULL,
+    Department VARCHAR(30),
+    Year INT,
+    Email VARCHAR(50)
+);
+
+CREATE TABLE Marks (
+    MarkID INT PRIMARY KEY,
+    StudentID INT,
+    Subject VARCHAR(50),
+    MarksObtained INT CHECK (MarksObtained BETWEEN 0 AND 100),
+    FOREIGN KEY (StudentID) REFERENCES Student(StudentID)
+);
+
+CREATE TABLE Result (
+    ResultID INT PRIMARY KEY,
+    StudentID INT,
+    TotalMarks INT,
+    Percentage DECIMAL(5,2),
+    Grade CHAR(2),
+    FOREIGN KEY (StudentID) REFERENCES Student(StudentID)
+);
+
+INSERT INTO Student VALUES
+(1, 'Amit Sharma', 'Computer', 3, 'amit@gmail.com'),
+(2, 'Sneha Patil', 'IT', 2, 'sneha@gmail.com'),
+(3, 'Rahul Deshmukh', 'ENTC', 3, 'rahul@gmail.com');
+
+INSERT INTO Marks VALUES
+(1, 1, 'DBMS', 85),
+(2, 1, 'DSA', 78),
+(3, 2, 'DBMS', 67),
+(4, 2, 'DSA', 72),
+(5, 3, 'DBMS', 90),
+(6, 3, 'DSA', 88);
+
+SELECT * FROM Student;
+
+UPDATE Student
+SET Email = 'amitsharma123@gmail.com'
+WHERE StudentID = 1;
+
+DELETE FROM Student
+WHERE StudentID = 3;
+
+SELECT StudentID, Subject, MarksObtained
+FROM Marks
+WHERE MarksObtained > 70;
+
+SELECT StudentID,
+       SUM(MarksObtained) AS TotalMarks,
+       AVG(MarksObtained) AS AverageMarks
+FROM Marks
+GROUP BY StudentID;
+
+SELECT StudentID, Subject,
+       MarksObtained,
+       (MarksObtained + (MarksObtained * 0.05)) AS MarksWithGrace
+FROM Marks;
+
+SELECT * FROM Marks
+WHERE MarksObtained >= 70 AND MarksObtained <= 90;
+
+SELECT StudentID, UPPER(Name) AS UpperCaseName, LENGTH(Name) AS NameLength
+FROM Student;
+
+SELECT StudentID FROM Marks WHERE Subject = 'DBMS'
+UNION
+SELECT StudentID FROM Marks WHERE Subject = 'DSA';
+
+INSERT INTO Result (ResultID, StudentID, TotalMarks, Percentage, Grade)
+SELECT ROW_NUMBER() OVER () AS ResultID,
+       StudentID,
+       SUM(MarksObtained) AS TotalMarks,
+       AVG(MarksObtained) AS Percentage,
+       CASE
+            WHEN AVG(MarksObtained) >= 75 THEN 'A'
+            WHEN AVG(MarksObtained) >= 60 THEN 'B'
+            ELSE 'C'
+       END AS Grade
+FROM Marks
+GROUP BY StudentID;
+
+SELECT * FROM Result;
