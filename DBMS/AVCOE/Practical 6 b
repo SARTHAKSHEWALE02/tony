@@ -1,0 +1,15 @@
+Practical No:
+
+Write a database trigger on Library table. The System should keep track of the records that are being updated or deleted. The old value of updated or deleted records should be added in Library_Audit table.
+
+create or replace trigger test
+after delete  or update on lib1
+REFERENCING old as o new as n
+for each row
+begin
+insert into lib_audit values(:o.rollno, :o.name,  :o.bookname);
+end;
+
+
+
+show errors trigger libtrig;
