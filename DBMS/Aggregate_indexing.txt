@@ -1,0 +1,45 @@
+use ShopDB
+
+db.sales.insertMany([
+  { _id: 1, item: "Laptop", price: 80000, quantity: 2, category: "Electronics", city: "Pune" },
+  { _id: 2, item: "Mouse", price: 500, quantity: 5, category: "Electronics", city: "Mumbai" },
+  { _id: 3, item: "Keyboard", price: 1000, quantity: 3, category: "Electronics", city: "Pune" },
+  { _id: 4, item: "Shirt", price: 1500, quantity: 4, category: "Clothing", city: "Delhi" },
+  { _id: 5, item: "Jeans", price: 2500, quantity: 2, category: "Clothing", city: "Mumbai" },
+  { _id: 6, item: "Shoes", price: 3000, quantity: 1, category: "Footwear", city: "Pune" }
+])
+
+db.sales.aggregate([
+  {
+    $group: {
+      _id: "$category",
+      totalSales: { $sum: { $multiply: ["$price", "$quantity"] } },
+      avgPrice: { $avg: "$price" },
+      count: { $sum: 1 }
+    }
+  },
+  {
+    $sort: { totalSales: -1 }   // Sort by total sales descending
+  }
+])
+
+db.sales.aggregate([
+  {
+    $group: {
+      _id: "$city",
+      totalRevenue: { $sum: { $multiply: ["$price", "$quantity"] } }
+    }
+  },
+  { $sort: { totalRevenue: -1 } }
+])
+
+db.sales.createIndex({ category: 1 })
+
+db.sales.find({ category: "Electronics" })
+
+db.sales.getIndexes()
+
+db.sales.createIndex({ category: 1, city: 1 })
+
+db.sales.find({ category: "Electronics" }).explain("executionStats")
+
