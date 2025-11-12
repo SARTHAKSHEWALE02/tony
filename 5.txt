@@ -103,3 +103,19 @@ public class FCFS_SJF_Preemptive {
                 totalTAT / p.length, totalWT / p.length);
     }
 }
+***************
+Sample Input
+*******
+Enter number of processes: 3
+
+Enter details for Process 1
+Arrival Time: 0
+Burst Time: 5
+
+Enter details for Process 2
+Arrival Time: 1
+Burst Time: 3
+
+Enter details for Process 3
+Arrival Time: 2
+Burst Time: 8
