@@ -51,3 +51,9 @@ class FIFO {
         System.out.printf("Hit Ratio: %.2f%n", (double) (pages - pageFaults) / pages);
     }
 }
+************** 
+sample input
+**************
+int incomingStream[] = {7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 2, 1};
+int frames = 3;
+
